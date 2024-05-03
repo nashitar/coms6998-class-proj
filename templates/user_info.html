@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+</head>
+<body>
+    <h1>User Information</h1>
+    <table border="1">
+        <tr>
+            <th>Email</th>
+            <th>Delay</th>
+            <th>Sticky Key</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Best Score</th>
+            <th>Performance</th>
+            <th>Frustration</th>
+            <th>Comments</th>
+        </tr>
+        {% for email, info in users.items() %}
+        <tr>
+            <td>{{ email }}</td>
+            <td>{{ info.get('delay', '') }}</td>
+            <td>{{ info.get('sticky_key', '') }}</td>
+            <td>{{ info.get('start', '') }}</td>
+            <td>{{ info.get('end', '') }}</td>
+            <td>{{ info.get('best_score', '') }}</td>
+            <td>{{ info.get('performance', '') }}</td>
+            <td>{{ info.get('frustration', '') }}</td>
+            <td>{{ info.get('comments', '') }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 import random
 from datetime import datetime
 
-
 app = Flask(__name__)
+
+users = {}  # Dictionary to store user information
 
 @app.route('/')
 def index():
@@ -12,7 +13,6 @@ def index():
 @app.route('/form')
 def form():
     email = request.args.get('email')
-
     return render_template('form.html', email=email)
 
 @app.route('/flappy', methods=['POST'])
@@ -22,17 +22,17 @@ def flappy():
     if not email:
         return 'Email is required'
 
-    with open('subjects.txt', 'r') as file:
-        emails = [line.split()[0] for line in file.readlines()]
-
-    if email in emails:
+    if email in users:
         return 'You\'ve already attempted this'
 
-    with open('subjects.txt', 'a') as file:
-        delay = random.randint(0, 30)
-        sticky_key = random.randint(0, 500)
-        file.write(email + ' | ' + str(delay) + ' | ' + str(sticky_key) + ' | ' + timestamp + '\n')
-    
+    delay = random.randint(0, 30)
+    sticky_key = random.randint(0, 500)
+    users[email] = {
+        'delay': delay,
+        'sticky_key': sticky_key,
+        'start': timestamp
+    }
+
     return render_template('flappy.html', delay=delay, sticky_key=sticky_key, email=email)
 
 @app.route('/submit-best-score', methods=['POST'])
@@ -42,16 +42,11 @@ def submit_best_score():
     email = data.get('email')
     timestamp = data.get('timestamp')
 
-    print(email)
+    if email not in users:
+        return 'User not found'
 
-    with open('subjects.txt', 'r') as file:
-        lines = file.readlines()
-
-    with open('subjects.txt', 'w') as file:
-        for line in lines:
-            if line.startswith(email):
-                line = line.strip() + ' | ' + timestamp +  ' | ' + str(best_score) + '\n'
-            file.write(line)
+    users[email]['best_score'] = best_score
+    users[email]['end'] = timestamp
 
     return render_template('form.html')
 
@@ -62,16 +57,21 @@ def submit_feedback():
     comments = request.form['comments']
     email = request.form['email']
 
-    with open('subjects.txt', 'r') as file:
-        lines = file.readlines()
+    if email not in users:
+        return 'User not found'
 
-    with open('subjects.txt', 'w') as file:
-        for line in lines:
-            if line.startswith(email):
-                line = line.strip() + ' | ' + performance +  ' | ' + frustration + ' | ' + comments + '\n'
-            file.write(line)
+    users[email]['performance'] = performance
+    users[email]['frustration'] = frustration
+    users[email]['comments'] = comments
 
     return render_template('thanks.html')
 
+@app.route('/user-info')
+def user_info():
+    return render_template('user_info.html', users=users)
+
+# if __name__ == '__main__':
+#     app.run(debug=True, host='0.0.0.0', port=4000)
+
 if __name__ == '__main__':
-    app.run(debug=True,  host='0.0.0.0', port=4000)
+    app.run(debug=True)
