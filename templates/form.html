@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #B9D9EB;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        select, textarea {
+            padding: 8px;
+            width: 100%;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical; /* Allow vertical resize of textarea */
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Feedback Form</h1>
+        <form action="/submit-feedback" method="post">
+            <label for="performance">1) How would you rate the performance of the game (e.g., smoothness, responsiveness)?</label>
+            <select id="performance" name="performance" required>
+                <option value="Excellent">Excellent</option>
+                <option value="Good">Good</option>
+                <option value="Fair">Fair</option>
+                <option value="Poor">Poor</option>
+            </select>
+
+            <label for="frustration">2) How would you rate the level of frustration you experienced while playing the game?</label>
+            <select id="frustration" name="frustration" required>
+                <option value="Very high">Very high</option>
+                <option value="High">High</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Low">Low</option>
+                <option value="Very low">Very low</option>
+            </select>
+
+            <label for="comments">3) Any additional comments or feedback about your experience playing the game?</label>
+            <textarea id="comments" name="comments" rows="4"></textarea>
+
+            <label type="hidden" for="email"></label>
+            <input type="hidden" id="email" name="email">
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <script>
+        // Get the email from the query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+
+        console.log(email)
+        
+        // Set the value of the hidden input field to the email
+        document.getElementById('email').value = email;
+    </script>
+</body>
+</html>
