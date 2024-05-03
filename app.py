@@ -40,7 +40,7 @@ def submit_best_score():
     data = request.get_json()
     best_score = data.get('bestScore')
     email = data.get('email')
-    timestamp = data.get('timestamp')
+    timestamp = datetime.now().strftime("%-m/%-d/%Y, %-I:%M:%S %p")
 
     if email not in users:
         return 'User not found'
